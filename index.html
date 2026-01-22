@@ -4,14 +4,25 @@
   <meta charset="UTF-8">
   <title>Dandy Club Black Cap</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <style>
     body {
       margin: 0;
-      background: #0b0b0b;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #1a1a1a, #000);
+      background-image:
+        repeating-linear-gradient(
+          45deg,
+          rgba(255,255,255,0.03),
+          rgba(255,255,255,0.03) 1px,
+          transparent 1px,
+          transparent 6px
+        );
       color: white;
       font-family: Arial, Helvetica, sans-serif;
-      background-image: repeating-radial-gradient(circle, #111 0, #111 2px, #0b0b0b 4px, #0b0b0b 8px);
+      overflow: hidden;
     }
+
     .container {
       min-height: 100vh;
       display: flex;
@@ -21,44 +32,139 @@
       text-align: center;
       padding: 20px;
     }
-    .logo {
-      font-size: 34px;
-      font-weight: bold;
-      margin-bottom: 25px;
-    }
-    img {
-      width: 280px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
-    h1 {
-      font-size: 26px;
-      margin: 10px 0;
-    }
-    p {
-      opacity: .8;
-      margin-bottom: 25px;
-    }
-    .scan {
+
+    /* TEXTO METÁLICO */
+    .metal-title {
+      font-size: 42px;
+      font-weight: 900;
       letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      background: linear-gradient(
+        120deg,
+        #f5f5f5,
+        #9e9e9e,
+        #ffffff,
+        #7a7a7a,
+        #f5f5f5
+      );
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: metalFlow 4s linear infinite;
+      position: relative;
+    }
+
+    @keyframes metalFlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 100% 50%; }
+    }
+
+    /* RAYOS */
+    .metal-title::after {
+      content: "";
+      position: absolute;
+      top: -10px;
+      left: -30px;
+      right: -30px;
+      bottom: -10px;
+      background:
+        linear-gradient(
+          90deg,
+          transparent,
+          rgba(255,255,255,0.7),
+          transparent
+        );
+      opacity: 0;
+      animation: lightning 2.8s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes lightning {
+      0% { opacity: 0; transform: translateX(-120%); }
+      10% { opacity: 1; }
+      20% { opacity: 0; }
+      100% { transform: translateX(120%); }
+    }
+
+    .cap-image {
+      width: 280px;
+      max-width: 90%;
+      border-radius: 14px;
+      margin-bottom: 20px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.85);
+      animation: fadeIn 1.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .product-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .subtitle {
       font-size: 14px;
+      opacity: 0.75;
+      margin-bottom: 30px;
+    }
+
+    .divider {
+      width: 60px;
+      height: 2px;
+      background: white;
+      opacity: 0.6;
+      margin: 25px 0;
+    }
+
+    .scan {
+      font-size: 14px;
+      letter-spacing: 4px;
+      opacity: 0.85;
+    }
+
+    .footer {
+      position: absolute;
+      bottom: 20px;
+      font-size: 11px;
+      opacity: 0.4;
+      letter-spacing: 2px;
     }
   </style>
 </head>
+
 <body>
   <div class="container">
-    <div class="logo">dc</div>
-    <img src="gorra.jpg">
-    <h1>Dandy Club Black Cap</h1>
-    <p>Página oficial del producto</p>
-    <div class="scan">ESCANEOS: <span id="c">1</span></div>
+    <div class="metal-title">DANDY CLUB</div>
+
+    <!-- IMAGEN DE LA GORRA -->
+    <img src="gorra.jpg" alt="Dandy Club Black Cap" class="cap-image">
+
+    <div class="product-title">Dandy Club Black Cap</div>
+    <div class="subtitle">Streetwear · Black Edition</div>
+
+    <div class="divider"></div>
+
+    <div class="scan">
+      ESCANEOS: <span id="counter">1</span>
+    </div>
+
+    <div class="footer">
+      NFC PRODUCT PAGE
+    </div>
   </div>
 
   <script>
-    let c = localStorage.getItem("dandy_scans");
-    c = c ? parseInt(c) + 1 : 1;
-    localStorage.setItem("dandy_scans", c);
-    document.getElementById("c").textContent = c;
+    let scans = localStorage.getItem("dandy_scans");
+    scans = scans ? parseInt(scans) + 1 : 1;
+    localStorage.setItem("dandy_scans", scans);
+    document.getElementById("counter").textContent = scans;
   </script>
 </body>
 </html>
