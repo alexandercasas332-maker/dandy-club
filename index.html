@@ -9,15 +9,35 @@
 body{
   margin:0;
   min-height:100vh;
-  background-color:#000;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Ctext x='10' y='60' font-size='40' fill='rgba(255,255,255,0.05)'%3E☠%3C/text%3E%3C/svg%3E");
+  background:#000;
   color:#fff;
   font-family:Arial, Helvetica, sans-serif;
   overflow:hidden;
 }
 
+/* CALAVERAS ANIMADAS */
+body::before{
+  content:"☠ ☠ ☠ ☠ ☠ ☠ ☠ ☠ ☠ ☠ ☠ ☠";
+  position:absolute;
+  top:0;
+  left:0;
+  width:200%;
+  height:200%;
+  font-size:48px;
+  color:rgba(255,255,255,0.06);
+  transform:rotate(-25deg);
+  animation:skullsMove 30s linear infinite;
+  pointer-events:none;
+}
+
+@keyframes skullsMove{
+  from{transform:translate(0,0) rotate(-25deg);}
+  to{transform:translate(-300px,300px) rotate(-25deg);}
+}
+
 .container{
+  position:relative;
+  z-index:2;
   min-height:100vh;
   display:flex;
   flex-direction:column;
@@ -54,29 +74,26 @@ body{
   100%{background-position:100% 50%}
 }
 
-/* RAYOS GRISES */
-.metal-title::after{
-  content:"";
+/* RAYO (solo al cargar) */
+.lightning{
   position:absolute;
-  top:-10px;
-  left:-40px;
-  right:-40px;
-  bottom:-10px;
+  top:0;
+  left:-100%;
+  width:200%;
+  height:100%;
   background:linear-gradient(
     90deg,
     transparent,
-    rgba(200,200,200,0.6),
+    rgba(200,200,200,0.7),
     transparent
   );
-  opacity:0;
-  animation:lightning 3s infinite;
+  animation:lightningFlash 0.8s ease-out;
+  pointer-events:none;
 }
 
-@keyframes lightning{
-  0%{opacity:0;transform:translateX(-120%)}
-  10%{opacity:1}
-  20%{opacity:0}
-  100%{transform:translateX(120%)}
+@keyframes lightningFlash{
+  from{left:-100%;opacity:1}
+  to{left:100%;opacity:0}
 }
 
 .cap-image{
@@ -115,7 +132,6 @@ body{
   margin:25px 0;
 }
 
-/* ESCANEOS BLANCOS */
 .scan{
   font-size:14px;
   letter-spacing:4px;
@@ -133,6 +149,15 @@ body{
 </head>
 
 <body>
+
+<!-- RAYO SOLO AL CARGAR -->
+<div class="lightning"></div>
+
+<!-- SONIDO METÁLICO -->
+<audio id="scanSound" preload="auto">
+  <source src="https://assets.mixkit.co/sfx/preview/mixkit-metal-hit-2154.mp3" type="audio/mpeg">
+</audio>
+
 <div class="container">
 
   <div class="metal-title">DANDY CLUB</div>
@@ -153,10 +178,18 @@ body{
 </div>
 
 <script>
+/* CONTADOR */
 let scans = localStorage.getItem("dandy_scans");
 scans = scans ? parseInt(scans) + 1 : 1;
 localStorage.setItem("dandy_scans", scans);
 document.getElementById("counter").textContent = scans;
+
+/* SONIDO AL ESCANEAR */
+window.addEventListener("load", () => {
+  const sound = document.getElementById("scanSound");
+  sound.volume = 0.4;
+  sound.play().catch(()=>{});
+});
 </script>
 
 </body>
